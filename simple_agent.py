@@ -7,7 +7,7 @@ SIMPLE AI AGENT BOILERPLATE
 A minimal, educational implementation of an autonomous AI agent.
 This single file demonstrates all core concepts needed to build AI agents:
 
-1. LLM Integration - Using OpenAI for reasoning
+1. LLM Integration - Using Groq Cloud (GPT OSS) for reasoning
 2. Tools - Functions the agent can call to interact with the world
 3. Memory - Storing context and conversation history
 4. Agent Loop - SENSE → PLAN → ACT → OBSERVE → REFLECT cycle
@@ -21,6 +21,7 @@ Usage:
 
 Requirements:
     pip install openai python-dotenv
+    Note: Uses Groq Cloud API (OpenAI-compatible)
 """
 
 # =============================================================================
@@ -46,12 +47,12 @@ class AgentConfig:
     Configuration for the agent.
     
     Attributes:
-        model: The LLM model to use (default: gpt-4o-mini for cost efficiency)
+        model: The LLM model to use (default: gpt-oss-120b for Groq)
         max_iterations: Maximum reasoning loops before stopping
         temperature: LLM creativity (0=deterministic, 1=creative)
         verbose: Whether to print detailed logs
     """
-    model: str = "gpt-4o-mini"
+    model: str = "gpt-oss-120b"
     max_iterations: int = 5
     temperature: float = 0.3
     verbose: bool = True
@@ -506,11 +507,14 @@ class SimpleAgent:
         self.tools = ToolRegistry(self.memory)
         self.logger = AgentLogger(verbose=self.config.verbose)
         
-        # Initialize OpenAI client
-        api_key = os.getenv("OPENAI_API_KEY")
+        # Initialize Groq Cloud client (OpenAI-compatible API)
+        api_key = os.getenv("GROQ_API_KEY")
         if not api_key:
-            raise ValueError("OPENAI_API_KEY not found in environment variables")
-        self.llm = OpenAI(api_key=api_key)
+            raise ValueError("GROQ_API_KEY not found in environment variables")
+        self.llm = OpenAI(
+            api_key=api_key,
+            base_url="https://api.groq.com/openai/v1"
+        )
         
         # System prompt that defines the agent's behavior
         self.system_prompt = """You are an intelligent AI assistant agent. You help users by:
@@ -846,15 +850,16 @@ def main():
     print("=" * 60)
     
     # Check for API key
-    if not os.getenv("OPENAI_API_KEY"):
-        print("\n❌ Error: OPENAI_API_KEY not found!")
-        print("Please create a .env file with your OpenAI API key:")
-        print("  OPENAI_API_KEY=sk-your-key-here")
+    if not os.getenv("GROQ_API_KEY"):
+        print("\n❌ Error: GROQ_API_KEY not found!")
+        print("Please create a .env file with your Groq API key:")
+        print("  GROQ_API_KEY=gsk-your-key-here")
+        print("Get your key at: https://console.groq.com/keys")
         return
     
     # Create agent with default config
     config = AgentConfig(
-        model="gpt-4o-mini",
+        model="gpt-oss-120b",
         max_iterations=5,
         temperature=0.3,
         verbose=True,

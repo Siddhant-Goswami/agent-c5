@@ -83,11 +83,11 @@ This boilerplate teaches you how to build **autonomous AI agents** - systems tha
 
 ### Required API Keys
 
-You need an **OpenAI API key** to run this agent:
+You need a **Groq Cloud API key** to run this agent:
 
-1. Go to [platform.openai.com/api-keys](https://platform.openai.com/api-keys)
+1. Go to [console.groq.com/keys](https://console.groq.com/keys)
 2. Create a new API key
-3. Copy the key (it starts with `sk-`)
+3. Copy the key (it starts with `gsk_`)
 
 ---
 
@@ -113,8 +113,8 @@ pip install openai python-dotenv
 # Copy the example environment file
 cp env.example .env
 
-# Edit .env and add your OpenAI API key
-# OPENAI_API_KEY=sk-your-actual-key-here
+# Edit .env and add your Groq Cloud API key
+# GROQ_API_KEY=gsk-your-actual-key-here
 ```
 
 ### Step 3: Run the Agent
@@ -230,7 +230,7 @@ Our boilerplate uses simple keyword search. Production systems use:
 
 ### 5. LLM as the Brain
 
-The LLM (GPT-4o-mini in our case) serves as the **reasoning engine**:
+The LLM (GPT OSS 120B via Groq Cloud in our case) serves as the **reasoning engine**:
 
 - Understands natural language goals
 - Decides which tools to use
@@ -262,7 +262,7 @@ STUDENT_GUIDE.md         # This guide
 ```python
 @dataclass
 class AgentConfig:
-    model: str = "gpt-4o-mini"      # LLM model to use
+    model: str = "gpt-oss-120b"  # LLM model to use (Groq Cloud)
     max_iterations: int = 5         # Safety limit
     temperature: float = 0.3        # Creativity (0=focused, 1=creative)
     verbose: bool = True            # Print detailed logs
@@ -336,7 +336,7 @@ Decide the NEXT action. Respond with JSON:
 {{"action_type": "TOOL_CALL", "tool": "...", "args": {...}}}
 """
 
-# Call OpenAI
+# Call Groq Cloud API (OpenAI-compatible)
 response = self.llm.chat.completions.create(
     model=self.config.model,
     messages=[
@@ -655,7 +655,7 @@ Once you've completed the tasks, try these advanced extensions:
 ### 1. Add Vector Search
 
 Replace keyword search with semantic search:
-- Use OpenAI embeddings: `text-embedding-3-small`
+- Use embeddings from Groq Cloud or other providers
 - Store embeddings in a simple JSON file or use a vector DB
 - Calculate cosine similarity for retrieval
 
@@ -693,16 +693,16 @@ Create specialized agents that work together:
 
 ### Common Issues
 
-**"OPENAI_API_KEY not found"**
+**"GROQ_API_KEY not found"**
 ```bash
 # Make sure .env file exists and has the key
 cat .env
-# Should show: OPENAI_API_KEY=sk-...
+# Should show: GROQ_API_KEY=gsk_...
 ```
 
 **"Rate limit exceeded"**
 - Wait a few seconds between runs
-- Use `gpt-4o-mini` instead of `gpt-4o` (cheaper, faster)
+- Groq Cloud offers fast inference with generous rate limits
 - Add retry with exponential backoff
 
 **"JSON parse error"**
@@ -727,8 +727,8 @@ cat .env
 
 ### Documentation
 
-- [OpenAI API Docs](https://platform.openai.com/docs)
-- [OpenAI Function Calling](https://platform.openai.com/docs/guides/function-calling)
+- [Groq Cloud API Docs](https://console.groq.com/docs)
+- [Groq Cloud Models](https://console.groq.com/docs/models)
 - [LangChain Agents](https://python.langchain.com/docs/modules/agents/)
 
 ### Articles
