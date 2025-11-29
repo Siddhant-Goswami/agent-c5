@@ -1,4 +1,4 @@
-# Ultra-Simple Agent Core with SPOAR Loop
+# Agent Core with SPOAR Loop
 
 A minimal, extensible AI agent implementation using the SENSE-PLAN-ACT-OBSERVE-REFLECT pattern.
 
