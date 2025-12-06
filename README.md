@@ -1,438 +1,808 @@
-# Agent Core with SPOAR Loop
+# Multi-Agent System with SPOAR Pattern
 
-A minimal, extensible AI agent implementation using the SENSE-PLAN-ACT-OBSERVE-REFLECT pattern.
+A beginner-friendly multi-agent system that processes meeting transcripts using specialized AI agents. Built on the **SPOAR (Sense-Plan-Act-Observe-Reflect)** pattern with a manager orchestrating 5 specialized agents.
 
-This repository contains:
-- **Simple Agent** (`simple_agent.py`) - Single agent with SPOAR loop (200 lines)
-- **Multi-Agent System** (`multi_agent_system.py`) - Manager pattern with specialized agents (400+ lines)
+**Model:** Uses `openai/gpt-oss-120b` via Groq Cloud
 
 ---
 
-## What's New: Multi-Agent System
+## 🎯 What Does This Do?
 
-We've extended the simple SPOAR agent into a **multi-agent system** using the manager pattern!
+**Input:** Meeting transcript (text file)
 
-### Features
-
-- 5 specialized agents: InsightExtractor, NoteTaker, TodoCreator, GitHubManager, ArticleWriter
-- Manager agent that orchestrates the workflow
-- Processes meeting transcripts end-to-end
-- Outputs: insights, notes, todos, GitHub repo plan, Medium article outline
-
-### Quick Start (Multi-Agent)
-
-```bash
-# Install dependencies
-pip install -r requirements.txt
-
-# Set up your API key in .env
-# GROQ_API_KEY=gsk-your-key-here
-
-# Run the multi-agent system
-python multi_agent_system.py
-
-# Or run with examples
-python example_workflow.py
-```
-
-### Documentation
-
-| Document | Purpose | Read Time |
-|----------|---------|-----------|
-| [QUICKSTART.md](./QUICKSTART.md) | Get started in 5 minutes | 5 min |
-| [USAGE.md](./USAGE.md) | How to use with your own transcripts | 15 min |
-| [TUTORIAL.md](./TUTORIAL.md) | Step-by-step guide from single to multi-agent | 20 min |
-| [MULTI_AGENT_README.md](./MULTI_AGENT_README.md) | Complete documentation and customization | 30 min |
-| [ARCHITECTURE.md](./ARCHITECTURE.md) | System design and architecture | 20 min |
-| [PROJECT_SUMMARY.md](./PROJECT_SUMMARY.md) | Project overview and key concepts | 10 min |
+**Output:** Complete analysis with:
+- 📊 **Key Insights** - 5-7 main takeaways
+- 📝 **Meeting Notes** - Structured summary with decisions and action items
+- ✅ **Action Items** - Todos with priorities and assignees
+- 🔨 **GitHub Repo Plan** - Repository structure and documentation outline
+- 📰 **Article Outline** - Medium article with title, sections, and CTA
 
 ---
 
-## Simple Agent (Original)
-
-## Quick Start
+## 🚀 Quick Start (5 Minutes)
 
 ### 1. Install Dependencies
 
 ```bash
-pip install groq python-dotenv
+pip install -r requirements.txt
 ```
 
-### 2. Setup API Key
+### 2. Set Up API Key
 
 ```bash
-# Copy the example environment file
-cp env.example .env
-
-# Edit .env and add your Groq Cloud API key
-# GROQ_API_KEY=gsk-your-actual-key-here
+# Create .env file with your Groq API key
+echo "GROQ_API_KEY=your-key-here" > .env
 ```
 
-Get your API key at: [console.groq.com/keys](https://console.groq.com/keys)
+Get your free API key at: [console.groq.com/keys](https://console.groq.com/keys)
 
-### 3. Run the Agent
+### 3. Run It!
 
 ```bash
-python simple_agent.py
+# Run with provided sample transcript
+python multi_agent_system.py
+
+# Check the results
+cat workflow_results.json
+```
+
+That's it! The system will process `sample_transcript.txt` and generate complete analysis.
+
+---
+
+## 📖 Table of Contents
+
+- [Quick Start](#-quick-start-5-minutes)
+- [How to Use](#-how-to-use)
+- [Architecture](#-architecture)
+- [How It Works](#-how-it-works-spoar-loop)
+- [Customization](#-customization)
+- [Tutorial](#-tutorial-understanding-multi-agents)
+- [For Students](#-for-students--educators)
+- [Troubleshooting](#-troubleshooting)
+- [Examples](#-examples)
+
+---
+
+## 💻 How to Use
+
+### Using Your Own Transcript
+
+**Method 1: Edit the file (easiest)**
+
+```bash
+# Edit the transcript file
+
+# Replace with your meeting content, then run
+python multi_agent_system.py
+```
+
+**Method 2: Use programmatically**
+
+```python
+from multi_agent_system import ManagerAgent
+
+# Your transcript
+with open("my_meeting.txt", "r") as f:
+    transcript = f.read()
+
+# Run the workflow
+manager = ManagerAgent()
+results = manager.run_workflow(transcript)
+
+# Save results
+manager.save_results("my_results.json")
+```
+
+### Recommended Transcript Format
+
+```
+Meeting: [Title]
+Date: [Date]
+Attendees: [Name (Role), Name (Role), ...]
+
+[Name]: [What they said...]
+
+[Name]: [Response...]
+
+Action Items:
+- [Item 1]
+- [Item 2]
+```
+
+**Example:**
+
+```
+Meeting: Product Review
+Date: December 6, 2024
+Attendees: Alice (CEO), Bob (CTO), Carol (Designer)
+
+Alice: Let's review the new dashboard design.
+
+Carol: I've updated the UI based on feedback.
+The new color scheme is more accessible.
+
+Bob: The backend API is ready. We can integrate this week.
+
+Action Items:
+- Carol: Finalize UI by Wednesday
+- Bob: Complete API integration by Thursday
 ```
 
 ---
 
-## The Complete Code (200 Lines)
+## 🏗️ Architecture
 
-The agent is implemented in a single file: `simple_agent.py`
+### Manager Pattern
 
-**Model:** Uses `openai/gpt-oss-120b` via Groq Cloud - a 120B parameter model optimized for agentic tasks.
-
-### Core Structure
-
-```python
-# Tools: Simple dictionary of functions
-TOOLS = {
-    "search": {
-        "description": "Search for information about a topic",
-        "function": lambda topic: f"Information about {topic}: [Mock result]"
-    },
-    "calculate": {
-        "description": "Calculate a math expression",
-        "function": lambda expr: str(eval(expr))
-    }
-}
-
-# Agent: Single class with SPOAR methods
-class SimpleAgent:
-    def run(self, goal: str) -> str:
-        # Main loop: SENSE → PLAN → ACT → OBSERVE → REFLECT
-        ...
-    
-    def _sense(self, context): ...
-    def _plan(self, context): ...
-    def _act(self, plan): ...
-    def _observe(self, plan, result): ...
-    def _reflect(self, context, observation): ...
 ```
+Manager Agent (Orchestrator)
+    │
+    ├─► InsightExtractorAgent    → Extracts 5-7 key insights
+    ├─► NoteTakerAgent           → Creates structured notes
+    ├─► TodoCreatorAgent         → Generates actionable todos
+    ├─► GitHubManagerAgent       → Plans repository structure
+    └─► ArticleWriterAgent       → Writes Medium article outline
+```
+
+### Data Flow
+
+```
+Input: sample_transcript.txt
+    │
+    ▼
+Step 1: Extract Insights
+    │ → insights: ["insight 1", "insight 2", ...]
+    ▼
+Step 2: Create Notes
+    │ → notes: {summary, key_points, decisions, next_steps}
+    ▼
+Step 3: Create Todos
+    │ → todos: [{task, priority, assignee}, ...]
+    ▼
+Step 4: Plan GitHub Repo
+    │ → github: {name, description, readme_outline, files}
+    ▼
+Step 5: Write Article
+    │ → article: {title, sections, conclusion, cta}
+    ▼
+Output: workflow_results.json
+```
+
+### System Components
+
+**1. Base Agent Class** - Implements the SPOAR loop
+```python
+class BaseAgent:
+    def run(self, goal, context, max_iterations=3):
+        # SPOAR Loop
+        for iteration in range(max_iterations):
+            context = self._sense(context)      # 👁️  Gather info
+            plan = self._plan(context)          # 🧠 Decide action
+            if plan["action"] == "COMPLETE":
+                return plan
+            result = self._act(plan)            # ⚡ Execute
+            observation = self._observe(plan, result)  # 📊 Record
+            reflection = self._reflect(context, observation)  # 💭 Evaluate
+```
+
+**2. Specialized Agents** - Each handles one specific task
+
+**3. Manager Agent** - Coordinates the workflow
 
 ---
 
-## Example Output
+## 🔄 How It Works: SPOAR Loop
+
+Every agent follows the same 5-phase pattern:
+
+### The SPOAR Cycle
 
 ```
-============================================================
-🎯 GOAL: What is 25 * 4 + 100?
-============================================================
-
---- ITERATION 1 ---
-
-👁️  SENSE
-  iteration: 1
-  goal: What is 25 * 4 + 100?
-  previous_actions: None
-
-🧠 PLAN
-  action: USE_TOOL
-  tool: calculate
-  reasoning: Need to calculate the mathematical expression 25 * 4 + 100...
-
-⚡ ACT
-  tool: calculate
-  args: {'expr': '25 * 4 + 100'}
-  result: 200
-
-📊 OBSERVE
-  action: calculate
-  success: True
-
-💭 REFLECT
-  reflection: The calculation successfully returned 200. This directly answers the goal, so we can now provide the complete answer.
-
---- ITERATION 2 ---
-
-🧠 PLAN
-  action: COMPLETE
-  tool: N/A
-  reasoning: I have the calculation result and can now answer the question...
-
-✅ COMPLETE
-  answer: The answer to 25 * 4 + 100 is 200.
-
-============================================================
-FINAL ANSWER: The answer to 25 * 4 + 100 is 200.
-============================================================
+┌──────────────────────────────────────┐
+│  1. SENSE (Gather Information)       │
+│     - Review goal                    │
+│     - Check context                  │
+│     - See previous actions           │
+└──────────────┬───────────────────────┘
+               ▼
+┌──────────────────────────────────────┐
+│  2. PLAN (Decide Action)             │
+│     - Call LLM with context          │
+│     - LLM decides what to do         │
+│     - Returns structured JSON        │
+└──────────────┬───────────────────────┘
+               ▼
+┌──────────────────────────────────────┐
+│  3. ACT (Execute)                    │
+│     - Perform the planned action     │
+│     - Generate the output            │
+└──────────────┬───────────────────────┘
+               ▼
+┌──────────────────────────────────────┐
+│  4. OBSERVE (Record Results)         │
+│     - Log what happened              │
+│     - Check for errors               │
+│     - Validate output                │
+└──────────────┬───────────────────────┘
+               ▼
+┌──────────────────────────────────────┐
+│  5. REFLECT (Evaluate Progress)      │
+│     - Did we make progress?          │
+│     - Should we continue?            │
+│     - What's next?                   │
+└──────────────┬───────────────────────┘
+               │
+               ├─ Complete? → Return Result
+               └─ Not done? → Next Iteration
 ```
+
+**Why SPOAR?**
+- **Autonomy:** Agent decides its own actions
+- **Adaptability:** Can recover from errors
+- **Transparency:** Every step is logged
+- **Reliability:** Structured, repeatable process
 
 ---
 
-## Core Concepts
+## 🎨 Customization
 
-### The SPOAR Loop
+### 1. Add a New Specialized Agent
 
-| Phase | Purpose | What Happens |
-|------|---------|---------------|
-| **SENSE** | Gather context | Collect current state, available tools, previous actions |
-| **PLAN** | Decide action | LLM (`openai/gpt-oss-120b`) chooses which tool to use or if goal is complete |
-| **ACT** | Execute action | Run the selected tool function |
-| **OBSERVE** | Record results | Log what happened, check for errors |
-| **REFLECT** | Evaluate progress | LLM (`openai/gpt-oss-120b`) assesses if we're closer to the goal |
-
-### Tools
-
-Tools are simple functions the agent can call:
+Create your own agent by extending `BaseAgent`:
 
 ```python
-TOOLS = {
-    "search": {
-        "description": "Search for information about a topic",
-        "function": lambda topic: f"Information about {topic}: [Mock result]"
-    },
-    "calculate": {
-        "description": "Calculate a math expression",
-        "function": lambda expr: str(eval(expr))
-    }
-}
-```
+class SentimentAnalyzerAgent(BaseAgent):
+    """Analyzes sentiment and emotional tone."""
 
-The LLM sees tool descriptions and decides:
-1. **Which tool** to use
-2. **What arguments** to pass
-3. **When** to complete instead of using a tool
-
----
-
-## How to Extend This Agent
-
-### 1. Add More Tools
-
-```python
-TOOLS = {
-    "search": {...},
-    "calculate": {...},
-    "get_weather": {
-        "description": "Get weather for a city",
-        "function": lambda city: f"Weather in {city}: 72°F, sunny"
-    },
-    "get_time": {
-        "description": "Get current time",
-        "function": lambda: __import__('datetime').datetime.now().strftime("%H:%M:%S")
-    }
-}
-```
-
-### 2. Add Memory Persistence
-
-```python
-class SimpleAgent:
     def __init__(self):
-        # ... existing code ...
-        self.long_term_memory = []  # Facts to remember
-    
-    def _sense(self, context: Dict[str, Any]) -> Dict[str, Any]:
-        # Add memory to context
-        context["memories"] = self.long_term_memory[-5:]  # Last 5 facts
-        return context
-    
-    def store_fact(self, fact: str):
-        """Store something in long-term memory."""
-        self.long_term_memory.append({
-            "fact": fact,
-            "timestamp": datetime.now().isoformat()
-        })
-```
+        super().__init__(
+            "SentimentAnalyzer",
+            "Analyze sentiment and tone of discussions"
+        )
 
-### 3. Add Error Recovery
+    def _plan(self, context: Dict[str, Any]) -> Dict[str, Any]:
+        """Custom planning for sentiment analysis."""
 
-```python
-def _act(self, plan: Dict[str, Any]) -> Any:
-    """ACT: Execute with retry on failure."""
-    
-    if plan["action"] != "USE_TOOL":
-        return None
-    
-    max_retries = 2
-    for attempt in range(max_retries + 1):
-        try:
-            tool_func = TOOLS[plan["tool"]]["function"]
-            result = tool_func(**plan.get("args", {}))
-            return result
-        except Exception as e:
-        if attempt < max_retries:
-                print(f"  ⚠️  Retry {attempt + 1}/{max_retries}")
-                continue
-            return f"ERROR after {max_retries} retries: {str(e)}"
-```
+        transcript = context.get("transcript", "")
 
-### 4. Add Structured Logging
+        prompt = f"""Analyze the sentiment and tone of this transcript:
 
-```python
-import json
-from datetime import datetime
+{transcript}
 
-class SimpleAgent:
-    def __init__(self):
-        # ... existing code ...
-    self.logs = []
-    
-    def _log_phase(self, phase: str, data: Dict[str, Any]):
-        """Log with structure."""
-    log_entry = {
-        "timestamp": datetime.now().isoformat(),
-        "phase": phase,
-            "data": data
-    }
-    self.logs.append(log_entry)
-    
-        # Print for visibility
-        print(f"{phase}")
-        for key, value in data.items():
-            print(f"  {key}: {value}")
-        print()
-    
-    def save_logs(self, filename: str = "agent_logs.jsonl"):
-        """Save logs to file."""
-        with open(filename, "a") as f:
-            for log in self.logs:
-                f.write(json.dumps(log) + "\n")
-```
-
-### 5. Add Multi-Step Planning
-
-```python
-def _plan(self, context: Dict[str, Any]) -> Dict[str, Any]:
-    """Enhanced planning with multi-step thinking."""
-    
-    prompt = f"""Goal: {context['goal']}
-
-Think step-by-step:
-1. What information do I have?
-2. What information do I need?
-3. What's the next logical action?
-
-Then respond with JSON:
+Respond with JSON:
 {{
-  "thinking": "your step-by-step reasoning",
-  "action": "USE_TOOL" or "COMPLETE",
-  "tool": "tool_name",
-  "args": {{}},
-  "reasoning": "why this action",
-  "answer": "final answer if COMPLETE"
+  "action": "COMPLETE",
+  "sentiment": {{
+    "overall": "positive/negative/neutral",
+    "tone": "professional/casual/urgent",
+    "confidence": 0.85
+  }}
 }}"""
-    
-    # ... rest of planning code ...
+
+        response = self.llm.chat.completions.create(
+            model=self.model,
+            messages=[
+                {"role": "system", "content": "You analyze sentiment. Respond with JSON only."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.3
+        )
+
+        return self._parse_json(response.choices[0].message.content)
 ```
 
-### 6. Add Real Web Search
+### 2. Add to Manager Workflow
 
 ```python
-import requests
+class ManagerAgent(BaseAgent):
+    def __init__(self):
+        super().__init__(...)
+        # Add your new agent
+        self.agent_tools["sentiment_analyzer"] = SentimentAnalyzerAgent()
 
-TOOLS = {
-    "web_search": {
-        "description": "Search the web for current information",
-        "function": lambda query: web_search(query)
-    }
-}
+    def run_workflow(self, transcript: str):
+        # ... existing steps ...
 
-def web_search(query: str) -> str:
-    """Real web search using Tavily API."""
-    api_key = os.getenv("TAVILY_API_KEY")
-    
-    response = requests.post(
-        "https://api.tavily.com/search",
-        json={
-            "api_key": api_key,
-            "query": query,
-            "max_results": 3
-        }
-    )
-    
-    results = response.json()
-    return json.dumps(results["results"], indent=2)
+        # Add new step
+        print("\n📍 STEP 6: Analyzing Sentiment")
+        sentiment_result = self.agent_tools["sentiment_analyzer"].run(
+            goal="Analyze meeting sentiment",
+            context=workflow_context,
+            max_iterations=2
+        )
+
+        if sentiment_result["success"]:
+            self.workflow_results["sentiment"] = sentiment_result["result"]["sentiment"]
+```
+
+### 3. Modify Agent Behavior
+
+Change any agent's prompt in its `_plan()` method:
+
+```python
+class NoteTakerAgent(BaseAgent):
+    def _plan(self, context):
+        # Customize the prompt
+        prompt = f"""
+        Create DETAILED meeting notes with:
+        - Executive summary (3-5 sentences)
+        - Detailed discussion points
+        - All decisions with rationale
+        - Action items with deadlines
+        - Risk assessment
+        - Follow-up items
+
+        Make it comprehensive!
+
+        {context['transcript']}
+        """
+        # ... rest of code
+```
+
+### 4. Run Agents in Parallel
+
+Speed up the workflow:
+
+```python
+from concurrent.futures import ThreadPoolExecutor
+
+def run_workflow_parallel(self, transcript: str):
+    # Step 1: Insights (must go first)
+    insights = self.agent_tools["insight_extractor"].run(...)
+
+    # Steps 2-4: Run in parallel
+    with ThreadPoolExecutor(max_workers=3) as executor:
+        notes_future = executor.submit(
+            self.agent_tools["note_taker"].run,
+            "Create notes", workflow_context, 2
+        )
+        todos_future = executor.submit(
+            self.agent_tools["todo_creator"].run,
+            "Create todos", workflow_context, 2
+        )
+        github_future = executor.submit(
+            self.agent_tools["github_manager"].run,
+            "Plan repo", workflow_context, 2
+        )
+
+        notes = notes_future.result()
+        todos = todos_future.result()
+        github = github_future.result()
 ```
 
 ---
 
-## Testing Different Goals
+## 📚 Tutorial: Understanding Multi-Agents
 
+### From Single to Multi-Agent
+
+**Single Agent (simple_agent.py):**
+- One agent handles everything
+- Limited by single context
+- Hard to specialize
+
+**Multi-Agent System:**
+- Multiple specialized agents
+- Each excels at one task
+- Coordinated by manager
+
+### Why Multiple Agents?
+
+**Specialization Benefits:**
+1. **Focus** - Each agent masters one domain
+2. **Quality** - Specialized prompts = better output
+3. **Modularity** - Easy to add/remove/modify agents
+4. **Clarity** - Clear responsibilities
+
+**Example:**
+
+One agent trying to do everything:
 ```python
-if __name__ == "__main__":
-    agent = SimpleAgent()
-    
-    # Test 1: Math
-    print("\n=== TEST 1: MATH ===")
-    agent.run("What is 15 * 8 + 42?")
-    
-    # Test 2: Information
-    print("\n=== TEST 2: SEARCH ===")
-    agent.run("Search for information about Python programming")
-    
-    # Test 3: Multiple steps
-    print("\n=== TEST 3: COMPLEX ===")
-    agent.run("Calculate 100 / 4, then search for information about that number")
+# Confused, generic agent
+agent.run("Extract insights AND create notes AND write article")
+# Result: Mediocre at all tasks
 ```
+
+Specialized agents:
+```python
+# Each agent is an expert
+insights = InsightExtractorAgent().run("Extract insights")
+notes = NoteTakerAgent().run("Create notes", context={"insights": insights})
+article = ArticleWriterAgent().run("Write article", context={"notes": notes})
+# Result: Excellent at each task
+```
+
+### The Manager Pattern
+
+**Manager's Role:**
+1. **Coordinate** - Call agents in the right order
+2. **Pass Context** - Share data between agents
+3. **Aggregate** - Collect all results
+4. **Handle Errors** - Graceful degradation
+
+**Why Manager Pattern?**
+- ✅ Central coordination point
+- ✅ Clear workflow definition
+- ✅ Easy to modify workflow
+- ✅ Agents stay independent
+
+### When to Use Single vs Multi-Agent
+
+**Use Single Agent when:**
+- Simple, focused task
+- Quick prototyping
+- No need for specialization
+- Speed is critical
+
+**Use Multi-Agent when:**
+- Complex workflow with distinct steps
+- Different expertise needed
+- Quality matters more than speed
+- Tasks can run in parallel
 
 ---
 
-## Troubleshooting
+## 👨‍🎓 For Students & Educators
 
-### "GROQ_API_KEY not found"
+### Learning Assignment
+
+A comprehensive **6-part assignment** teaches multi-agent systems from first principles:
+
+**See [ASSIGNMENT.md](./ASSIGNMENT.md)** for complete details.
+
+**Assignment Structure:**
+1. **Part 1:** Understanding Single Agents (SPOAR loop)
+2. **Part 2:** Agent Specialization (Why and how)
+3. **Part 3:** Manager Pattern (Orchestration)
+4. **Part 4:** Building Custom Agents (Practice)
+5. **Part 5:** Advanced Patterns (Parallel, feedback loops)
+6. **Part 6:** Final Project (Integration)
+
+**Total Time:** 25-32 hours
+**Difficulty:** Intermediate
+**Prerequisites:** Python knowledge
+
+### Key Concepts Taught
+
+1. **SPOAR Loop** - Foundation of all agents
+2. **Specialization** - Why focused agents beat generalists
+3. **Orchestration** - Coordinating multiple agents
+4. **Communication** - How agents share data
+5. **Patterns** - Parallel execution, feedback loops, conditional routing
+
+### Self-Study Path
+
+1. **Week 1:** Understand the code
+   - Run `python simple_agent.py`
+   - Study `multi_agent_system.py`
+   - Read this README thoroughly
+
+2. **Week 2:** Experiment
+   - Modify agent prompts
+   - Add a simple agent
+   - Try different transcripts
+
+3. **Week 3:** Build
+   - Create a custom agent from scratch
+   - Integrate into workflow
+   - Test and iterate
+
+4. **Week 4:** Extend
+   - Implement parallel execution
+   - Add feedback loops
+   - Build a complete system
+
+---
+
+## 🛠️ Troubleshooting
+
+### Common Issues
+
+**1. "GROQ_API_KEY not found"**
 
 ```bash
-# Make sure .env file exists and has the key
+# Make sure .env exists
 cat .env
 # Should show: GROQ_API_KEY=gsk_...
+
+# If not, create it
+echo "GROQ_API_KEY=your-actual-key" > .env
 ```
 
-### "Rate limit exceeded"
+**2. "JSON parsing error"**
 
-- Wait a few seconds between runs
-- Groq Cloud offers fast inference with generous rate limits
-- Add retry with exponential backoff
+The LLM sometimes returns invalid JSON. Solutions:
+- Lower temperature for consistency
+- Make prompts clearer
+- Add examples in prompt
+- Check `_parse_json` error handling
 
-### "JSON parse error"
+**3. "Agent gets stuck in loop"**
 
-- The LLM sometimes outputs invalid JSON
-- Check the `_parse_json` method for error handling
-- Lower temperature for more consistent outputs
+- Reduce `max_iterations` in agent calls
+- Make goal more specific
+- Ensure COMPLETE condition is clear in prompt
 
-### "Tool not found"
+**4. "Poor quality output"**
 
-- Check tool name spelling in your prompt
-- Ensure tool is registered in `TOOLS` dictionary
+Improve with:
+- More specific prompts
+- Better context passing
+- Higher temperature for creativity
+- Few-shot examples
 
----
+**5. "Too slow"**
 
-## Key Takeaways
+Speed up with:
+- Parallel execution (see customization)
+- Faster model (haiku instead of sonnet)
+- Lower temperature
+- Reduce max_iterations
 
-1. **SPOAR Loop is Just 5 Functions**
-   - SENSE → Gather context
-   - PLAN → Decide action
-   - ACT → Execute
-   - OBSERVE → Record results
-   - REFLECT → Evaluate
+### Debug Mode
 
-2. **Tools = Simple Functions**
-   - Dictionary of name → function
-   - LLM sees descriptions, picks tools
+Add logging to see what's happening:
 
-3. **Context Flows Through Loop**
-   - Each phase enriches context
-   - Next iteration has full history
-
-4. **Easy to Extend**
-   - Add new tools → 3 lines
-   - Add memory → Few lines in SENSE
-   - Add logging → Modify _log_phase
-
-This is your **foundation**. Everything else (RAG, multi-agent, planning, etc.) builds on this core loop!
-
----
-
-## Resources
-
-- [Groq Cloud API Docs](https://console.groq.com/docs)
-- [Groq Cloud Models](https://console.groq.com/docs/models)
-- [GPT OSS 120B Model Documentation](https://console.groq.com/docs/model/openai/gpt-oss-120b)
-- [LangChain Agents](https://python.langchain.com/docs/modules/agents/)
+```python
+# In BaseAgent._plan()
+print("\n=== LLM PROMPT ===")
+print(prompt)
+print("\n=== LLM RESPONSE ===")
+print(response.choices[0].message.content)
+```
 
 ---
 
-Happy building! 🚀
+## 📊 Examples
+
+### Example 1: Quick Team Meeting
+
+**Input (sample_transcript.txt):**
+```
+Meeting: Daily Standup
+Date: Dec 6, 2024
+
+Alice: Finished the login feature yesterday. Starting password reset today.
+Bob: Still working on the API. Should finish today.
+Carol: Need help with database schema review.
+```
+
+**Output (workflow_results.json):**
+```json
+{
+  "insights": [
+    "Alice completed login feature and moving to password reset",
+    "Bob expects API completion today",
+    "Carol needs database schema assistance"
+  ],
+  "todos": [
+    {"task": "Complete password reset feature", "priority": "High", "assignee": "Alice"},
+    {"task": "Finish API implementation", "priority": "High", "assignee": "Bob"},
+    {"task": "Review Carol's database schema", "priority": "Medium", "assignee": "Team"}
+  ]
+}
+```
+
+### Example 2: Strategy Session
+
+**Input:**
+```
+Meeting: Q1 Planning
+Leadership Team
+
+Discussed priorities for Q1. Decided to:
+- Launch product by March
+- Hire 2 engineers
+- Focus on enterprise customers
+- Build comprehensive documentation
+```
+
+**Output:** Strategic insights, high-level roadmap, article about the strategy
+
+---
+
+## 🔍 Project Structure
+
+```
+agent-c5/
+├── multi_agent_system.py      # Main multi-agent system
+├── simple_agent.py            # Original single agent (for learning)
+├── example_workflow.py        # Example usage
+├── sample_transcript.txt      # Input file (edit this!)
+├── workflow_results.json      # Output file (generated)
+├── requirements.txt           # Dependencies
+├── .env                       # API key (create this)
+├── README.md                  # This file
+└── ASSIGNMENT.md              # Student assignment
+```
+
+---
+
+## 🧪 Running Tests
+
+```bash
+# Quick test with short transcript
+python test_multi_agent.py
+
+# Full workflow with sample
+python multi_agent_system.py
+
+# Custom examples
+python example_workflow.py
+```
+
+---
+
+## 💡 Advanced Features
+
+### 1. Process Multiple Transcripts
+
+```python
+import glob
+from multi_agent_system import ManagerAgent
+
+manager = ManagerAgent()
+
+for file in glob.glob("transcripts/*.txt"):
+    with open(file, "r") as f:
+        transcript = f.read()
+
+    results = manager.run_workflow(transcript)
+    output_file = file.replace(".txt", "_results.json")
+    manager.save_results(output_file)
+```
+
+### 2. Export to Different Formats
+
+```python
+# Export as Markdown
+def export_markdown(results):
+    md = f"""# Meeting Notes
+
+## Summary
+{results['notes']['summary']}
+
+## Action Items
+{chr(10).join(f"- [{t['priority']}] {t['task']} - {t['assignee']}" for t in results['todos'])}
+"""
+    with open("notes.md", "w") as f:
+        f.write(md)
+```
+
+### 3. Integration Examples
+
+```python
+# Send to Slack
+import requests
+
+webhook_url = "https://hooks.slack.com/services/..."
+requests.post(webhook_url, json={
+    "text": f"Meeting Summary: {results['notes']['summary']}"
+})
+
+# Save to Notion
+notion_api.pages.create(
+    parent={"database_id": db_id},
+    properties={
+        "Summary": results['notes']['summary'],
+        "Todos": results['todos']
+    }
+)
+```
+
+---
+
+## 📖 Key Concepts
+
+### 1. The SPOAR Loop
+
+Every agent uses this pattern:
+- **S**ense - Gather information
+- **P**lan - Decide what to do (LLM)
+- **A**ct - Execute the action
+- **O**bserve - Record the results
+- **R**eflect - Evaluate progress
+
+### 2. Agent Specialization
+
+Each agent has:
+- **One clear purpose** - Extract insights, create notes, etc.
+- **Custom prompt** - Optimized for its task
+- **Structured output** - Consistent, parseable format
+
+### 3. Manager Orchestration
+
+The manager:
+- Calls agents in sequence
+- Passes context between agents
+- Aggregates all results
+- Handles the workflow
+
+### 4. Context Flow
+
+Data flows through the system:
+```
+transcript → insights → notes → todos
+                      ↓
+                   github plan
+                      ↓
+                   article
+```
+
+---
+
+## 🎯 Design Principles
+
+1. **Single Responsibility** - Each agent does one thing well
+2. **Composition** - Manager composes agents
+3. **Inheritance** - All agents inherit from BaseAgent
+4. **Modularity** - Easy to add/remove agents
+5. **Transparency** - Every step is logged
+6. **Beginner-Friendly** - Simple to understand and extend
+
+---
+
+## 🚀 Next Steps
+
+Once you're comfortable:
+
+1. **Add Your Own Agent** - Create a specialized agent for your needs
+2. **Optimize Performance** - Implement parallel execution
+3. **Build Integrations** - Connect to your tools (Slack, Notion, etc.)
+4. **Create a Web UI** - Build a Flask/FastAPI + React frontend
+5. **Implement Learning** - Agents that improve based on feedback
+
+---
+
+## 📚 Resources
+
+### This Project
+- [ASSIGNMENT.md](./ASSIGNMENT.md) - Complete learning assignment
+
+### External Resources
+- [Groq Cloud API](https://console.groq.com/docs) - LLM provider
+- [LangChain Agents](https://python.langchain.com/docs/modules/agents/) - Production framework
+- [AutoGen](https://microsoft.github.io/autogen/) - Microsoft's multi-agent framework
+
+---
+
+## 🤝 Contributing
+
+Ideas for contributions:
+- New specialized agents
+- Additional workflow patterns
+- Integration examples
+- Performance optimizations
+- Documentation improvements
+
+---
+
+## 📜 License
+
+This is an educational project. Use freely for learning and building!
+
+---
+
+## 🎓 Learning Path Summary
+
+```
+1. Run the simple agent
+   ↓
+2. Understand SPOAR loop
+   ↓
+3. Run multi-agent system
+   ↓
+4. Study one specialized agent
+   ↓
+5. Add your own agent
+   ↓
+6. Modify the workflow
+   ↓
+7. Build a complete system
+```
+
+---
+
+**Built with ❤️ by Siddhant and his wife Claudia.**
+
