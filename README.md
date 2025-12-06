@@ -2,7 +2,53 @@
 
 A minimal, extensible AI agent implementation using the SENSE-PLAN-ACT-OBSERVE-REFLECT pattern.
 
+This repository contains:
+- **Simple Agent** (`simple_agent.py`) - Single agent with SPOAR loop (200 lines)
+- **Multi-Agent System** (`multi_agent_system.py`) - Manager pattern with specialized agents (400+ lines)
+
 ---
+
+## What's New: Multi-Agent System
+
+We've extended the simple SPOAR agent into a **multi-agent system** using the manager pattern!
+
+### Features
+
+- 5 specialized agents: InsightExtractor, NoteTaker, TodoCreator, GitHubManager, ArticleWriter
+- Manager agent that orchestrates the workflow
+- Processes meeting transcripts end-to-end
+- Outputs: insights, notes, todos, GitHub repo plan, Medium article outline
+
+### Quick Start (Multi-Agent)
+
+```bash
+# Install dependencies
+pip install -r requirements.txt
+
+# Set up your API key in .env
+# GROQ_API_KEY=gsk-your-key-here
+
+# Run the multi-agent system
+python multi_agent_system.py
+
+# Or run with examples
+python example_workflow.py
+```
+
+### Documentation
+
+| Document | Purpose | Read Time |
+|----------|---------|-----------|
+| [QUICKSTART.md](./QUICKSTART.md) | Get started in 5 minutes | 5 min |
+| [USAGE.md](./USAGE.md) | How to use with your own transcripts | 15 min |
+| [TUTORIAL.md](./TUTORIAL.md) | Step-by-step guide from single to multi-agent | 20 min |
+| [MULTI_AGENT_README.md](./MULTI_AGENT_README.md) | Complete documentation and customization | 30 min |
+| [ARCHITECTURE.md](./ARCHITECTURE.md) | System design and architecture | 20 min |
+| [PROJECT_SUMMARY.md](./PROJECT_SUMMARY.md) | Project overview and key concepts | 10 min |
+
+---
+
+## Simple Agent (Original)
 
 ## Quick Start
 
