@@ -1,7 +1,5 @@
 # Multi-Agent Systems: Learning Assignment
 
----
-
 ## 📚 Learning Objectives
 
 By completing this assignment, you will:
@@ -13,8 +11,6 @@ By completing this assignment, you will:
 5. ✅ Build practical agents that solve real-world problems
 6. ✅ Understand when to use single vs. multi-agent approaches
 7. ✅ Learn to design agent communication and coordination
-
----
 
 ## 🎯 Assignment Structure
 
@@ -28,8 +24,6 @@ This assignment is divided into 6 progressive parts:
 | 4 | Building Custom Agents | 1 hour | 
 | 5 | Advanced Patterns | 1-2 hours |
 | 6 | Final Project | 6-8 hours |
-
----
 
 ## Part 1: Understanding Single Agents (Foundation)
 
