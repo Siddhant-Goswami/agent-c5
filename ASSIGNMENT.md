@@ -1,8 +1,5 @@
 # Multi-Agent Systems: Learning Assignment
 
-**Course:** Introduction to AI Agents and Multi-Agent Systems
-**Difficulty:** Intermediate (Python knowledge required)
-
 ---
 
 ## 📚 Learning Objectives
