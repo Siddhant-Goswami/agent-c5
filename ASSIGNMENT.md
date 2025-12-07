@@ -25,7 +25,7 @@ This assignment is divided into 6 progressive parts:
 | 1 | Understanding Single Agents | 0.5 hour |
 | 2 | Agent Specialization | 0.5 hour |
 | 3 | Manager Pattern | 1 hours |
-| 4 | Building Custom Agents | 1 hours | 
+| 4 | Building Custom Agents | 1 hour | 
 | 5 | Advanced Patterns | 1-2 hours |
 | 6 | Final Project | 6-8 hours |
 
@@ -35,7 +35,7 @@ This assignment is divided into 6 progressive parts:
 
 **Learning Goal:** Master the SPOAR loop and single-agent architecture.
 
-### 📖 Reading (1 hour)
+### 📖 Reading
 
 1. Read `README.md` - Understand the simple agent
 2. Read the first half of `TUTORIAL.md` - Focus on SPOAR loop
@@ -43,7 +43,7 @@ This assignment is divided into 6 progressive parts:
 
 ### 💻 Exercises
 
-#### Exercise 1.1: Trace the SPOAR Loop (30 min)
+#### Exercise 1.1: Trace the SPOAR Loop
 
 Run the simple agent and answer these questions:
 
@@ -59,7 +59,7 @@ python simple_agent.py
 
 **Deliverable:** A document (`part1_q1.md`) answering these questions with code references.
 
-#### Exercise 1.2: Add a New Tool (1 hour)
+#### Exercise 1.2: Add a New Tool
 
 Add a `get_weather` tool to `simple_agent.py`:
 
@@ -80,7 +80,7 @@ TOOLS = {
 
 **Deliverable:** Modified `simple_agent.py` and test output.
 
-#### Exercise 1.3: Understand LLM Decision Making (1 hour)
+#### Exercise 1.3: Understand LLM Decision Making
 
 Modify the `_plan()` method to log the full LLM prompt and response:
 
@@ -115,14 +115,14 @@ def _plan(self, context: Dict[str, Any]) -> Dict[str, Any]:
 
 **Learning Goal:** Understand why and how to create specialized agents.
 
-### 📖 Reading (30 min)
+### 📖 Reading
 
 1. Read `ARCHITECTURE.md` - Focus on "Specialized Agents" section
 2. Study one specialized agent in `multi_agent_system.py` (e.g., `InsightExtractorAgent`)
 
 ### 💻 Exercises
 
-#### Exercise 2.1: Analyze Specialization (1 hour)
+#### Exercise 2.1: Analyze Specialization
 
 Compare `simple_agent.py` vs `InsightExtractorAgent`:
 
@@ -134,7 +134,7 @@ Compare `simple_agent.py` vs `InsightExtractorAgent`:
 
 **Deliverable:** Comparison document with code examples.
 
-#### Exercise 2.2: Create a Sentiment Analyzer Agent (2 hours)
+#### Exercise 2.2: Create a Sentiment Analyzer Agent 
 
 Create a new specialized agent that analyzes sentiment:
 
@@ -183,7 +183,7 @@ text = "The product is good but customer service was terrible."
 
 **Learning Goal:** Understand how to coordinate multiple agents.
 
-### 📖 Reading (1 hour)
+### 📖 Reading
 
 1. Read "Manager Pattern" section in `ARCHITECTURE.md`
 2. Study `ManagerAgent` class in `multi_agent_system.py`
@@ -191,7 +191,7 @@ text = "The product is good but customer service was terrible."
 
 ### 💻 Exercises
 
-#### Exercise 3.1: Understand Data Flow (1 hour)
+#### Exercise 3.1: Understand Data Flow
 
 Trace how data flows through the workflow:
 
@@ -203,7 +203,7 @@ Trace how data flows through the workflow:
 
 **Deliverable:** Flowchart or diagram (hand-drawn is fine, or use tools like Mermaid, draw.io)
 
-#### Exercise 3.2: Add Your Sentiment Agent to the Workflow (2 hours)
+#### Exercise 3.2: Add Your Sentiment Agent to the Workflow
 
 Integrate your `SentimentAnalyzerAgent` into the manager:
 
@@ -248,7 +248,7 @@ class ManagerAgent(BaseAgent):
 
 ### 💻 Exercises
 
-#### Exercise 4.1: Email Generator Agent (3 hours)
+#### Exercise 4.1: Email Generator Agent
 
 Create an agent that generates professional emails from meeting notes:
 
@@ -288,7 +288,7 @@ class EmailGeneratorAgent(BaseAgent):
 - 3 test outputs (one for each test case)
 - Comparison with manually written emails
 
-#### Exercise 4.2: Risk Assessment Agent (3 hours)
+#### Exercise 4.2: Risk Assessment Agent
 
 Create an agent that identifies project risks from meeting discussions:
 
@@ -335,7 +335,7 @@ class RiskAssessmentAgent(BaseAgent):
 
 ### 💻 Exercises
 
-#### Exercise 5.1: Parallel Execution (3 hours)
+#### Exercise 5.1: Parallel Execution
 
 Modify the manager to run independent agents in parallel:
 
@@ -384,7 +384,7 @@ def run_workflow_parallel(self, transcript: str):
 - Performance comparison (sequential vs parallel)
 - Dependency graph showing what can/can't be parallelized
 
-#### Exercise 5.2: Agent Feedback Loop (3 hours)
+#### Exercise 5.2: Agent Feedback Loop
 
 Implement a feedback loop where agents review each other's work:
 
@@ -433,7 +433,7 @@ def run_workflow_with_review(self, transcript: str):
 - Comparison of v1 vs v2 notes quality
 - Analysis of when feedback loops are beneficial
 
-#### Exercise 5.3: Conditional Agent Selection (2 hours)
+#### Exercise 5.3: Conditional Agent Selection
 
 Implement dynamic agent selection based on meeting type:
 
@@ -539,7 +539,7 @@ Choose ONE of these projects (or propose your own):
 
 Your final project must include:
 
-#### 1. Design Document (2-3 hours)
+#### 1. Design Document
 
 Create `project_design.md` with:
 
@@ -549,7 +549,7 @@ Create `project_design.md` with:
 - **Data Flow** - How information moves through the system
 - **Challenges & Solutions** - What difficulties you anticipate
 
-#### 2. Implementation (6-8 hours)
+#### 2. Implementation
 
 - Minimum 4 specialized agents
 - 1 manager/orchestrator agent
@@ -557,14 +557,14 @@ Create `project_design.md` with:
 - Error handling and validation
 - Clear logging and debugging output
 
-#### 3. Testing & Validation (2-3 hours)
+#### 3. Testing & Validation
 
 - At least 3 comprehensive test cases
 - Edge cases and error scenarios
 - Performance measurements
 - Quality assessment of outputs
 
-#### 4. Documentation (2 hours)
+#### 4. Documentation
 
 - `README.md` for your project
 - Installation instructions
@@ -572,7 +572,7 @@ Create `project_design.md` with:
 - Code comments and docstrings
 - Known limitations and future work
 
-#### 5. Reflection Paper (1-2 hours)
+#### 5. Reflection Paper 
 
 Write `reflection.md` addressing:
 
